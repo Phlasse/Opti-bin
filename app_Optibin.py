@@ -4,7 +4,7 @@ from os.path import isfile, join
 import time
 import pandas as pd
 import numpy as np
-import fivebin4gui
+import optibin.fivebin
 import matplotlib.pyplot as plt
 
 
@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 ##### Overall Layout ###########################################################
 ################################################################################
 root = Tk()
-root.title("Binning Tools")
+root.title("Opti-Bin")
 root.geometry("955x440")
 
 head_frame = LabelFrame(root, text="Binning Tools", padx=90, pady=10)
@@ -40,7 +40,7 @@ tool_choice.set("1")
 
 #place widgets
 description.pack()
-Radiobutton(head_frame, text="5ive-bin", variable=tool_choice, value=1).pack()
+Radiobutton(head_frame, text="Five-bin", variable=tool_choice, value=1).pack()
 Radiobutton(head_frame, text="Weiteres noch nicht verfügbar", variable=tool_choice, value=2).pack()
 
 
@@ -54,7 +54,7 @@ def confirm_file_selection():
     data_conf_label.grid(row=2, column=1)
     return
 
-files = [f for f in os.listdir("../data/Input") if isfile(join("../data/Input", f))]
+files = [f for f in os.listdir("data/Input") if isfile(join("data/Input", f))]
 file_choice = StringVar()
 file_choice.set(files[0])
 file_drop = OptionMenu(tool_frame, file_choice, *files)
@@ -92,14 +92,14 @@ feature_prompt.grid(row=2, column=0)
 def run_binning():
     tic = time.clock()
     direction = file_choice.get()
-    data = pd.read_csv("../data/Input/"+direction).sort_values(by=['messdaten'])
+    data = pd.read_csv("data/Input/"+direction).sort_values(by=['messdaten'])
     tolerance = float(tolerance_input.get())/100
     feature_choice = int(feature_5bin.get())
 
     if feature_choice == 1:
-        Result, result_file_name = fivebin4gui.mid_iterator(data, direction, tolerance, quick=True)
+        Result, result_file_name = optibin.fivebin.mid_iterator(data, direction, tolerance, quick=True)
     elif feature_choice == 2:
-        Result, result_file_name = fivebin4gui.mid_iterator(data, direction, tolerance, quick=False)
+        Result, result_file_name = optibin.fivebin.mid_iterator(data, direction, tolerance, quick=False)
     else:
         pass
     toc = time.clock()

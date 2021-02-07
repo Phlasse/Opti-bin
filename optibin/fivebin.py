@@ -91,7 +91,7 @@ def get_input_stats(data, tolerance=0.028):
     return lim_upper, lim_lower, mean_df, thresh_5_percent, mid_quantile
 
 def get_data():
-    files = [f for f in os.listdir("../data/Input") if isfile(join("../data/Input", f))]
+    files = [f for f in os.listdir("data/Input") if isfile(join("data/Input", f))]
     files_dic = {}
     print(f"Folgende Daten wurden gefunden:\n")
     for num, i in enumerate(files):
@@ -99,7 +99,7 @@ def get_data():
         print(f"[{num+1}] - {i}")
     choice = pyip.inputNum(f"\nWaehle eine Datei aus. (Index)\n")
     direction = files_dic[choice]
-    data = pd.read_csv("../data/Input/"+direction)
+    data = pd.read_csv("data/Input/"+direction)
     data = data.sort_values(by=['messdaten'])
 
     return data, direction
@@ -159,7 +159,7 @@ def mid_iterator(data, file_direction, tolerance, quick=False):
 
     else:
         timestamp = get_time()
-        result_file_name = "../data/Output/"+timestamp+file_direction.replace(".csv", "_result.csv")
+        result_file_name = "data/Output/"+timestamp+file_direction.replace(".csv", "_result.csv")
         Result.to_csv(result_file_name)
 
     return Result, result_file_name
@@ -187,7 +187,7 @@ def specific_bin(data, file_direction, tolerance):
 
     if min(np.array(result.bin_sum)) >= corridor[0] and max(np.array(result.bin_sum)) <= corridor[1]:
         Result = result
-        result_file_name = "../data/Output/"+file_direction.replace(".csv", "_result.csv")
+        result_file_name = "data/Output/"+file_direction.replace(".csv", "_result.csv")
         Result.to_csv(result_file_name)
 
     if Result is "none":
@@ -195,7 +195,7 @@ def specific_bin(data, file_direction, tolerance):
 
     else:
         timestamp = get_time()
-        result_file_name = "../data/Output/"+timestamp+file_direction.replace(".csv", "_result.csv")
+        result_file_name = "data/Output/"+timestamp+file_direction.replace(".csv", "_result.csv")
         Result.to_csv(result_file_name)
 
         print(f"\nDer Vorgang wurde beendet.")
