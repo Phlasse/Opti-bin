@@ -1,0 +1,4 @@
+doppeten code entschlacken z-B:
+mach eine Funktion aus den save to csv, anstelle es ständig neu zu definieren.
+
+spezial-binning hinzufügen

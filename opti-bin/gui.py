@@ -54,7 +54,7 @@ def confirm_file_selection():
     data_conf_label.grid(row=2, column=1)
     return
 
-files = [f for f in os.listdir("data") if isfile(join("data", f))]
+files = [f for f in os.listdir("../data/Input") if isfile(join("../data/Input", f))]
 file_choice = StringVar()
 file_choice.set(files[0])
 file_drop = OptionMenu(tool_frame, file_choice, *files)
@@ -92,7 +92,7 @@ feature_prompt.grid(row=2, column=0)
 def run_binning():
     tic = time.clock()
     direction = file_choice.get()
-    data = pd.read_csv("data/"+direction).sort_values(by=['messdaten'])
+    data = pd.read_csv("../data/Input/"+direction).sort_values(by=['messdaten'])
     tolerance = float(tolerance_input.get())/100
     feature_choice = int(feature_5bin.get())
 
