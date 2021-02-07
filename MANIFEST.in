@@ -1,0 +1,3 @@
+graft opti-bin
+global-exclude *.py[cod] __pycache__ *.so *.ipynb
+recursive-exclude  opti-bin/jupy *
