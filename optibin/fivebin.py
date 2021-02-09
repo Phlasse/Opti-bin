@@ -1,14 +1,13 @@
 import pandas as pd
 import numpy as np
-import pyinputplus as pyip
 import os
 from os.path import isfile, join
 import datetime
-import time
 
 currentDT = datetime.datetime.now()
 
 def get_time():
+    ''' Ermittelt einen Zeitstempel'''
     currentDT = datetime.datetime.now()
     return currentDT.strftime("%Y%m%d_%H%M_")
 
