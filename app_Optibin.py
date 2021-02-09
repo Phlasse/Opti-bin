@@ -118,7 +118,7 @@ def run_binning():
 
 def show_distplot():
     direction = file_choice.get()
-    data = pd.read_csv("data/"+direction).sort_values(by=['messdaten'])
+    data = pd.read_csv("data/Input/"+direction).sort_values(by=['messdaten'])
     plt.hist(data.messdaten, 50)
     plt.show()
     return

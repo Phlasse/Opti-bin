@@ -206,39 +206,3 @@ def specific_bin(data, file_direction, tolerance):
         print(f"\nDas Ergebnis wurde hier gespeichert: \n\n{result_file_name}\n")
 
     return True
-
-def main():
-    print("##############################\n")
-    print(f"\nWillkommen beim Fivebin Binning Tool\n")
-    data, file_direction = get_data()
-    tolerance = get_tolerance()
-    print(f"\n Folgende Features sind verfuegbar:\n")
-    features = {1: "Iteratives Binning (Empfohlen)", 2 : "Schnelles Binning", 3 : "Bestimmtes Binning" , 9 : "Tool beenden"}
-
-    choice = True
-    while choice == True:
-        for feature in features:
-            print(f'[{feature}] - {features[feature]}')
-        choice = pyip.inputNum(f"\nWelches Feature moechtest du verwenden?\n")
-        tic = time.clock()
-        if choice==1:
-            choice = mid_iterator(data, file_direction, tolerance, quick=False)
-            print(f'Der Prozess dauerte {time.clock() - tic} Sekunden')
-        elif choice == 2:
-            choice = mid_iterator(data, file_direction, tolerance, quick=True)
-            print(f'Der Prozess dauerte {time.clock() - tic} Sekunden')
-        elif choice ==3:
-            choice = specific_bin(data, file_direction, tolerance)
-            print(f'Der Prozess dauerte {time.clock() - tic} Sekunden')
-
-        elif choice==9:
-            choice = False
-        else:
-            print(f"Ich konnte das Programm nicht finden \n")
-            continue
-        print("Was moechtest du nun machen?\n")
-    return True
-
-
-if __name__ == '__main__':
-    main()
