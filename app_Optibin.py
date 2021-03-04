@@ -90,7 +90,7 @@ feature_prompt.grid(row=2, column=0)
 #create Functions and variables
 
 def run_binning():
-    tic = time.clock()
+    tic = time.perf_counter()
     direction = file_choice.get()
     data = pd.read_csv("data/Input/"+direction).sort_values(by=['messdaten'])
     tolerance = float(tolerance_input.get())/100
@@ -102,10 +102,10 @@ def run_binning():
         Result, result_file_name = optibin.fivebin.mid_iterator(data, direction, tolerance, quick=False)
     else:
         pass
-    toc = time.clock()
+    toc = time.perf_counter()
     tictoc = round(toc-tic,0)
     time_label = Label(result_frame, text="Der Prozess dauerte "+str(round(tictoc,2))+" Sekunden\n").grid(row=1, column=0)
-    if Result is "none":
+    if Result is None:
         error_label = Label(result_frame, text=result_file_name).grid(row=2, column=0)
 
     else:
