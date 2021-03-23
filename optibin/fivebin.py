@@ -79,13 +79,17 @@ def create_new_list(bin_list):
     cleaned_list = create_bin_stats(start)
     return cleaned_list
 
-def get_input_stats(data, tolerance=0.028):
+def get_input_stats(data, tolerance=0.028, tol_in_percent=True):
     ''' Diese Funktion nimmt den Eingangsdatensatz und bestimmt den größten und kleinsten
         Wert, den Durchschnittswert und die 5% max_dif (tolerance 2.5%)'''
     lim_upper = data["messdaten"].max()
     lim_lower= data["messdaten"].min()
     mean_df = data["messdaten"].mean()
-    thresh_5_percent = data["messdaten"].mean()*(2*tolerance)
+    if tol_in_percent == True:
+        thresh_5_percent = data["messdaten"].mean()*(2*tolerance)
+    else:
+        thresh_5_percent = data["messdaten"].mean()*(tolerance)
+
     mid_quantile = np.quantile(data["messdaten"], 0.5)
     return lim_upper, lim_lower, mean_df, thresh_5_percent, mid_quantile
 
@@ -163,45 +167,23 @@ def mid_iterator(data, file_direction, tolerance, quick=False):
 
     return Result, result_file_name
 
-def specific_bin(data, file_direction, tolerance):
-    stats = get_input_stats(data, tolerance=tolerance)
-    max_dif = round(stats[3], 3)
+def specific_bin(data, file_direction, tolerance, lower_thresh, upper_thresh):
+    stats = get_input_stats(data, tolerance=tolerance, tol_in_percent=False)
+    max_dif = tolerance
     up_down_switch = int((len(np.array(data.messdaten)) / 5) / 2 - 1)
-
-
-    while True:
-        lower_thresh = pyip.inputNum(f"\nBitte gebe die untere Grenze an mit einem . als Dezimalseparator\n")
-        upper_thresh = pyip.inputNum(f"\nBitte gebe die obere Grenze an mit einem . als Dezimalseparator\n")
-        corridor = (lower_thresh, upper_thresh)
-        print(f"\nDer eingegebene Korridor ist: {corridor}")
-        response_corr = pyip.inputYesNo(f"\nStimmen die Werte? (yes/no) \n") == "yes"
-        if response_corr is True:
-            break
-    Result = "none"
+    corridor = (lower_thresh, upper_thresh)
+    Result = None
     for i in range(up_down_switch):
                 result = create_new_list(get_bottom_up_bin_list(data, top=i, corridor=corridor))
                 if min(np.array(result.bin_sum)) >= corridor[0] and max(np.array(result.bin_sum)) <= corridor[1] and max(np.array(result.bin_dif)) <= max_dif:
                     max_corridor_span = max(np.array(result.bin_sum)) - min(np.array(result.bin_sum))
                     Result = result
 
-    if min(np.array(result.bin_sum)) >= corridor[0] and max(np.array(result.bin_sum)) <= corridor[1]:
-        Result = result
-        result_file_name = "data/Output/"+file_direction.replace(".csv", "_result.csv")
-        Result.to_csv(result_file_name)
-
-    if Result is "none":
-        print("Fivebin konnte kein Ergebnis erzielen.")
-
+    if Result is None:
+        result_file_name = "Fivebin konnte kein Ergebnis erzielen."
     else:
         timestamp = get_time()
         result_file_name = "data/Output/"+timestamp+file_direction.replace(".csv", "_result.csv")
         Result.to_csv(result_file_name)
 
-        print(f"\nDer Vorgang wurde beendet.")
-        print(f'\nUntere Bin-Grenze= {min(np.array(Result.bin_sum))}')
-        print(f'Obere Bin-Grenze= {max(np.array(Result.bin_sum))}')
-        print(f'Maximale Varianz= {max(np.array(Result.bin_dif))}')
-
-        print(f"\nDas Ergebnis wurde hier gespeichert: \n\n{result_file_name}\n")
-
-    return True
+    return Result, result_file_name

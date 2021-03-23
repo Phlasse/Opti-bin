@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 ################################################################################
 root = Tk()
 root.title("Opti-Bin")
-root.geometry("955x440")
+root.geometry("955x600")
 
 head_frame = LabelFrame(root, text="Binning Tools", padx=90, pady=10)
 head_frame.grid(row=0, column=0)
@@ -21,8 +21,11 @@ head_frame.grid(row=0, column=0)
 tool_frame = LabelFrame(root, text="Tool Konfiguration", padx=12, pady=10)
 tool_frame.grid(row=1, column=0, pady=10, padx=10)
 
+manual_frame = LabelFrame(root, text="Festlegen der Bin-Grenzen (bei manuellem Binning)", padx=57, pady=10)
+manual_frame.grid(row=2, column=0, pady=10, padx=10)
+
 execute_frame = LabelFrame(root, text="Aktionen", padx=106, pady=10)
-execute_frame.grid(row=2, column=0)
+execute_frame.grid(row=3, column=0)
 
 result_frame = LabelFrame(root, text="Ergebnisse", padx=80, pady=10)
 result_frame.grid(row=0, column=1, rowspan=3)
@@ -49,10 +52,10 @@ Radiobutton(head_frame, text="Weiteres noch nicht verfügbar", variable=tool_cho
 
 #create functions & variables
 
-def confirm_file_selection():
+'''def confirm_file_selection():
     data_conf_label = Label(tool_frame, text="Auswahl bestätigt", fg="green")
     data_conf_label.grid(row=2, column=1)
-    return
+    return'''# temporär entfernt um zu testen, ob es überhaupt noch verwendet wird?!
 
 files = [f for f in os.listdir("data/Input") if isfile(join("data/Input", f))]
 file_choice = StringVar()
@@ -65,6 +68,7 @@ feature_5bin = IntVar()
 feature_5bin.set("1")
 Radiobutton(tool_frame, text="Schnelles Binning", variable=feature_5bin, value=1).grid(row=2, column=1)
 Radiobutton(tool_frame, text="Iteratives Binning \n(empfohlen)", variable=feature_5bin, value=2).grid(row=3, column=1)
+Radiobutton(tool_frame, text="Manuelles Binning", variable=feature_5bin, value=3).grid(row=4, column=1)
 
 
 #create widgets
@@ -85,6 +89,39 @@ tolerance_prompt.grid(row=1, column=0)
 tolerance_input.grid(row=1, column=1)
 feature_prompt.grid(row=2, column=0)
 
+#### Manuelle Binning Einstellungen Frame ################################################
+
+#create functions & variables
+
+
+
+#create widgets
+
+lower_bin_prompt = Label(manual_frame, text="Gewünschte untere Bin-Grenze:")
+upper_bin_prompt = Label(manual_frame, text="Gewünschte obere Bin-Grenze:")
+bin_tolerance_prompt = Label(manual_frame, text="Gewünschte Bin-Toleranz [ABS]:")
+
+lower_bin_input = Entry(manual_frame, width=25)
+lower_bin_input.insert(0, "1.7")
+
+upper_bin_input = Entry(manual_frame, width=25)
+upper_bin_input.insert(0, "1.8")
+
+bin_tolerance_input = Entry(manual_frame, width=25)
+bin_tolerance_input.insert(0, "0.02")
+
+
+
+#place widgets
+lower_bin_prompt.grid(row=1, column=0)
+upper_bin_prompt.grid(row=2, column=0)
+bin_tolerance_prompt.grid(row=3, column=0)
+
+lower_bin_input.grid(row=1, column=1)
+upper_bin_input.grid(row=2, column=1)
+bin_tolerance_input.grid(row=3, column=1)
+
+
 ##### Execute frame - Ausführung    ############################################
 
 #create Functions and variables
@@ -100,6 +137,8 @@ def run_binning():
         Result, result_file_name = optibin.fivebin.mid_iterator(data, direction, tolerance, quick=True)
     elif feature_choice == 2:
         Result, result_file_name = optibin.fivebin.mid_iterator(data, direction, tolerance, quick=False)
+    elif feature_choice == 3:
+        Result, result_file_name = optibin.fivebin.specific_bin(data, direction, float(bin_tolerance_input.get()), float(lower_bin_input.get()), float(upper_bin_input.get()))
     else:
         pass
     toc = time.perf_counter()
@@ -150,7 +189,7 @@ result_introduction_label.grid(row=0, column=0)
 #################################################################
 button_quit = Button(root, text="Programm Beenden", command=root.quit)
 
-button_quit.grid(row=3, column=0, columnspan=2, pady=10)
+button_quit.grid(row=4, column=0, columnspan=2, pady=10)
 
 #################################################################
 # run the main "event loop
