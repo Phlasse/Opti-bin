@@ -146,6 +146,7 @@ def run_binning():
     time_label = Label(result_frame, text="Der Prozess dauerte "+str(round(tictoc,2))+" Sekunden\n").grid(row=1, column=0)
     if Result is None:
         error_label = Label(result_frame, text=result_file_name).grid(row=2, column=0)
+        print(tkinter.__version__)
 
     else:
         success_label = Label(result_frame, text="Der Vorgang wurde erfolgreich beendet.\n", font=("calibri", 12), fg="green", padx=25).grid(row=0, column=0)
